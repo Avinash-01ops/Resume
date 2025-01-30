@@ -1,0 +1,227 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #0073e6, #00c6ff);
+    color: #333;
+    font-size: 18px;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+#Header {
+    background-color: #0073e6;
+    color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    background: linear-gradient(135deg, #0073e6, #00c6ff);
+    padding: 0 20px; /* Add padding for better spacing on smaller screens */
+}
+
+#Header h1 {
+    font-size: 60px;
+    margin-bottom: 10px;
+    animation: fadeIn 1s ease-in-out; /* Add animation */
+}
+
+#Header h2 {
+    font-size: 70px;
+    color: white;
+    margin-top: 0;
+    animation: fadeIn 1.5s ease-in-out; /* Add animation */
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px; /* Limit max width for better readability */
+    margin: auto;
+    overflow: hidden;
+}
+
+section {
+    width: 100%;
+    padding: 80px 0; /* Increase padding for better spacing */
+    background-color: white;
+    margin: 40px 0;
+    border-radius: 12px; /* Slightly larger radius for a modern look */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Softer shadow */
+}
+
+h2 {
+    color: #0073e6;
+    padding-bottom: 20px; /* Increase padding for better spacing */
+    font-size: 32px;
+    text-align: center; /* Center align section headings */
+    margin-bottom: 40px; /* Add margin for better separation */
+}
+
+/* Skills Section */
+.skill-category {
+    margin-bottom: 60px; /* Increase margin for better spacing */
+}
+
+.skill-category h3 {
+    font-size: 26px;
+    color: #0073e6;
+    margin-bottom: 30px; /* Increase margin for better spacing */
+    text-align: center; /* Center align category headings */
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Wider skill boxes */
+    gap: 30px; /* Increase gap for better spacing */
+}
+
+.skill-box {
+    background: #f9f9f9;
+    padding: 30px; /* Increase padding for better spacing */
+    border-radius: 12px; /* Slightly larger radius */
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e0e0e0; /* Add border for better definition */
+}
+
+.skill-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* More pronounced shadow on hover */
+}
+
+.skill-box i {
+    font-size: 50px; /* Increase icon size */
+    color: #0073e6;
+    margin-bottom: 20px; /* Increase margin for better spacing */
+}
+
+.skill-box p {
+    font-size: 18px;
+    color: #555;
+    margin: 0;
+}
+
+/* Professional Experience Section */
+.experience-pagination {
+    position: relative;
+}
+
+.experience-content {
+    margin-bottom: 40px; /* Increase margin for better spacing */
+}
+
+.job {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.job.active {
+    display: block;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px; /* Increase margin for better spacing */
+}
+
+.pagination-btn {
+    background: #0073e6;
+    color: white;
+    border: none;
+    padding: 12px 24px; /* Slightly larger padding */
+    border-radius: 8px; /* Slightly larger radius */
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    font-size: 16px;
+}
+
+.pagination-btn:hover {
+    background: #005bb5;
+    transform: translateY(-2px); /* Add subtle hover effect */
+}
+
+#page-indicator {
+    margin: 0 20px;
+    font-size: 18px;
+    color: #0073e6; /* Add color for better visibility */
+}
+
+/* Achievements Section */
+.achievements-pagination {
+    position: relative;
+}
+
+.achievements-content {
+    margin-bottom: 40px; /* Increase margin for better spacing */
+}
+
+.achievement {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.achievement.active {
+    display: block;
+}
+
+/* Footer Section */
+footer {
+    background-color: #1d1d1d;
+    color: white;
+    text-align: center;
+    padding: 40px 0; /* Increase padding for better spacing */
+    margin-top: 60px; /* Increase margin for better separation */
+}
+
+footer a {
+    color: #00c6ff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #0073e6; /* Change hover color for better contrast */
+    text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px); /* Add subtle slide-up effect */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%; /* Increase width for better use of space */
+    }
+
+    #Header h1 {
+        font-size: 40px;
+    }
+
+    #Header h2 {
+        font-size: 50px;
+    }
+
+    section {
+        padding: 60px 0; /* Adjust padding for smaller screens */
+    }
+
+    .skills-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust grid for smaller screens */
+    }
+
+    .skill-box {
+        padding: 20px; /* Adjust padding for smaller screens */
+    }
+}
