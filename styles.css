@@ -69,6 +69,7 @@ body {
 }
 
 @keyframes bounce {
+
   0%,
   100% {
     transform: translateY(0);
@@ -167,35 +168,51 @@ body {
 
 .skills-cards {
   position: relative;
-  min-height: 220px;
+  min-height: 300px;
 }
 
 .skills-card {
   display: none;
-  flex-direction: column;
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
   animation: fadeIn 0.5s;
 }
 
 .skills-card.active {
-  display: flex;
+  display: grid;
 }
 
-.skill-progress {
-  display: flex;
-  align-items: center;
-  gap: 18px;
+.skill-item {
+  background: #f8f9ff;
+  border-radius: 12px;
+  padding: 20px;
+  border-left: 4px solid #007aff;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.skill-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.1);
+}
+
+.skill-name {
   font-size: 1.1rem;
+  font-weight: 600;
   color: #222;
+  margin-bottom: 8px;
 }
 
-.progress-bar {
-  height: 8px;
-  background: linear-gradient(90deg, #007aff 60%, #e0e7ff 100%);
-  border-radius: 8px;
-  min-width: 80px;
-  max-width: 220px;
-  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+.skill-level {
+  font-size: 0.9rem;
+  color: #007aff;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.skill-description {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.5;
 }
 
 @keyframes fadeIn {
@@ -236,7 +253,7 @@ body {
   position: relative;
   cursor: pointer;
   transition: box-shadow 0.3s, transform 0.3s;
-  overflow: hidden;
+  font-weight: 600;
 }
 
 .domain-card:hover {
@@ -244,32 +261,21 @@ body {
   transform: translateY(-6px) scale(1.04);
 }
 
-.domain-details {
-  opacity: 0;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #007aff;
-  color: #fff;
-  border-radius: 0 0 16px 16px;
-  padding: 18px;
-  font-size: 0.95rem;
-  transition: opacity 0.3s;
-  pointer-events: none;
-}
-
-.domain-card:hover .domain-details {
-  opacity: 1;
-  pointer-events: auto;
-}
-
 /* Timeline Section */
 .timeline {
   position: relative;
   margin: 48px 0 0 0;
-  padding-left: 32px;
-  border-left: 2px solid #e0e7ff;
+  padding-left: 40px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 30px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #e0e7ff;
 }
 
 .timeline-item {
@@ -279,14 +285,15 @@ body {
 
 .timeline-dot {
   position: absolute;
-  left: -13px;
-  top: 8px;
-  width: 18px;
-  height: 18px;
+  left: -20px;
+  top: 12px;
+  width: 16px;
+  height: 16px;
   background: #007aff;
   border-radius: 50%;
   box-shadow: 0 2px 8px rgba(0, 122, 255, 0.12);
   border: 3px solid #fff;
+  z-index: 2;
 }
 
 .timeline-content {
@@ -294,7 +301,7 @@ body {
   border-radius: 16px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
   padding: 24px;
-  margin-left: 18px;
+  /* margin-left: 10px; */
 }
 
 .timeline-content h3 {
@@ -636,18 +643,117 @@ body {
   .certificates-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .cert-modal-content {
     max-width: 95%;
     max-height: 70%;
   }
-  
+
   .cert-close {
     top: 10px;
     right: 20px;
     font-size: 30px;
   }
 }
+@media (max-width: 768px) {
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+}
+}
+
+/* Domain Modal */
+.domain-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  animation: fadeIn 0.3s;
+}
+
+.domain-modal-content {
+  background: #fff;
+  margin: 5% auto;
+  padding: 0;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.domain-close {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  color: #999;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10001;
+}
+
+.domain-close:hover {
+  color: #007aff;
+}
+
+.domain-modal-header {
+  background: linear-gradient(135deg, #007aff, #0051a8);
+  color: white;
+  padding: 30px;
+  border-radius: 20px 20px 0 0;
+  text-align: center;
+}
+
+.domain-modal-header i {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.domain-modal-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.domain-modal-body {
+  padding: 30px;
+}
+
+.domain-modal-body p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #444;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .domain-modal-content {
+    width: 95%;
+    margin: 10% auto;
+  }
+
+  .domain-modal-header {
+    padding: 20px;
+  }
+
+  .domain-modal-body {
+    padding: 20px;
+  }
+
+  .domain-close {
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+  }
+}
+
 
 /* Contact Section */
 .contact-section {
@@ -836,6 +942,7 @@ footer.main-footer a:hover {
   .domain-card {
     padding: 18px 8px;
   }
+
 
   .timeline {
     padding-left: 18px;
