@@ -1,245 +1,309 @@
-// 1. Hello World Typing Animation
-const helloText = document.getElementById('hello-text');
-const helloString = 'Hello, World';
-let helloIndex = 0;
-function typeHello() {
-    if (helloText && helloIndex <= helloString.length) {
-        helloText.textContent = helloString.slice(0, helloIndex);
-        helloIndex++;
-        setTimeout(typeHello, 120);
-    }
-}
-typeHello();
-
-// 2. Skills Tabs Switching
-const tabBtns = document.querySelectorAll('.tab-btn');
-const skillCards = document.querySelectorAll('.skills-card');
-tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        tabBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        skillCards.forEach(card => {
-            card.classList.remove('active');
-            if (card.id === btn.dataset.tab) card.classList.add('active');
-        });
-    });
-});
-
-// 3. Expandable Project Cards
-const expandBtns = document.querySelectorAll('.expand-btn');
-expandBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const card = btn.closest('.project-card');
-        card.classList.toggle('expanded');
-    });
-});
-
-// 4. Contact Form Modal
-const contactForm = document.querySelector('.contact-form');
-const thankyouModal = document.getElementById('thankyou-modal');
-const closeModalBtn = document.querySelector('.close-modal');
-if (contactForm) {
-    contactForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        thankyouModal.classList.add('active');
-        contactForm.reset();
-    });
-}
-if (closeModalBtn) {
-    closeModalBtn.addEventListener('click', function () {
-        thankyouModal.classList.remove('active');
-    });
-}
-window.addEventListener('click', function (e) {
-    if (e.target === thankyouModal) {
-        thankyouModal.classList.remove('active');
-    }
-});
-
-// 5. Smooth Fade-in Animations on Scroll
-const fadeEls = document.querySelectorAll('.summary-section, .skills-section, .domains-section, .experience-section, .projects-section, .contact-section');
-const fadeInOnScroll = () => {
-    fadeEls.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 60) {
-            el.style.opacity = 1;
-            el.style.transform = 'translateY(0)';
-            el.style.transition = 'opacity 0.6s, transform 0.6s';
-        } else {
-            el.style.opacity = 0;
-            el.style.transform = 'translateY(40px)';
-        }
-    });
-};
-window.addEventListener('scroll', fadeInOnScroll);
-window.addEventListener('load', fadeInOnScroll);
-
-// Fade-in animations for sections
+// ============================================
+// DARK MODE TOGGLE
+// ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    const sections = document.querySelectorAll('section');
-    sections.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(20px)';
-        section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const html = document.documentElement;
+    
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', currentTheme);
+    updateThemeIcon(currentTheme);
+    
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
     });
+    
+    function updateThemeIcon(theme) {
+        if (theme === 'dark') {
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        } else {
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+    }
+});
 
-    const observer = new IntersectionObserver((entries, observer) => {
+// ============================================
+// HEADER SCROLL EFFECT
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    const header = document.getElementById('mainHeader');
+    
+    function handleScroll() {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    }
+    
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial state
+});
+
+// ============================================
+// SCROLL ANIMATIONS
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+                entry.target.classList.add('visible');
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
+    }, observerOptions);
 
-    sections.forEach(section => {
-        observer.observe(section);
+    // Observe experience timeline cards
+    const experienceCards = document.querySelectorAll('.experience-card-timeline');
+    experienceCards.forEach(card => {
+        observer.observe(card);
     });
+
+    // Observe project cards
+    const projectCards = document.querySelectorAll('.project-card');
+    projectCards.forEach(card => {
+        observer.observe(card);
+    });
+
+    // Observe skill categories with staggered delay
+    const skillCategories = document.querySelectorAll('.skill-category');
+    skillCategories.forEach((category, index) => {
+        observer.observe(category);
+        // Add staggered animation delay
+        category.style.transitionDelay = `${index * 0.1}s`;
+    });
+
+    // Observe philosophy items
+    const philosophyItems = document.querySelectorAll('.philosophy-item');
+    philosophyItems.forEach(item => {
+        observer.observe(item);
+    });
+
+    // Set current year in footer
+    const currentYear = new Date().getFullYear();
+    const yearElement = document.getElementById('currentYear');
+    if (yearElement) {
+        yearElement.textContent = currentYear;
+    }
 });
 
-// Certificate Modal Functions
-function openModal(imgSrc, title, desc) {
-    const modal = document.getElementById('cert-modal');
-    const modalImg = document.getElementById('cert-img');
-    const modalTitle = document.getElementById('cert-title');
-    const modalDesc = document.getElementById('cert-desc');
+// ============================================
+// SMOOTH SCROLLING FOR ANCHOR LINKS
+// ============================================
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+            const headerOffset = 80;
+            const elementPosition = target.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-    modal.style.display = 'block';
-    modalImg.src = imgSrc;
-    modalTitle.textContent = title;
-    modalDesc.textContent = desc;
-}
-
-function closeModal() {
-    document.getElementById('cert-modal').style.display = 'none';
-}
-
-// Certificate Modal Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
-    const closeBtn = document.querySelector('.cert-close');
-    const modal = document.getElementById('cert-modal');
-
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeModal);
-    }
-
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-    }
-
-    // ESC key to close modal
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeModal();
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
         }
     });
 });
 
-// Certificate Modal Functions
-function openModal(imgSrc, title, desc) {
-    const modal = document.getElementById('cert-modal');
-    const modalImg = document.getElementById('cert-img');
-    const modalTitle = document.getElementById('cert-title');
-    const modalDesc = document.getElementById('cert-desc');
-
-    modal.style.display = 'block';
-    modalImg.src = imgSrc;
-    modalTitle.textContent = title;
-    modalDesc.textContent = desc;
+// ============================================
+// CONTACT FORM HANDLING
+// ============================================
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = new FormData(this);
+        const name = formData.get('name');
+        const email = formData.get('email');
+        const message = formData.get('message');
+        
+        // Basic validation
+        if (!name || !email || !message) {
+            alert('Please fill in all fields.');
+            return;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        
+        // Here you would typically send the form data to a server
+        // For now, we'll just show the thank you modal
+        showThankYouModal();
+        this.reset();
+    });
 }
 
-function closeModal() {
-    document.getElementById('cert-modal').style.display = 'none';
-}
-
-// Domain Modal Functions
-// Domain Modal Functions
-const domainData = {
-    insurance: {
-        icon: 'fas fa-shield-alt',
-        name: 'Insurance',
-        description: 'Comprehensive testing experience in insurance platforms including parametric insurance for natural catastrophe risks (wind, flood, earthquake, hail), workers compensation case management, and risk management solutions. Expertise in testing policy management, claims processing, and regulatory compliance features.'
-    },
-    risk: {
-        icon: 'fas fa-chart-line',
-        name: 'Risk Management',
-        description: 'Specialized in testing risk analytics platforms using factor-based models for portfolio risk decomposition. Experience with Layers Module, Program Builder, Summary Module, Insurer Module, Exposure Summary, SOV Module, and comprehensive reporting systems for portfolio optimization and scenario analysis.'
-    },
-    healthcare: {
-        icon: 'fas fa-heartbeat',
-        name: 'Healthcare & E-learning',
-        description: 'Extensive experience in healthcare staffing technology platforms with ATS, VMS, compliance engines, and mobile applications. Also worked on U.S.-based training and certification platforms for healthcare professionals, including Agency Panel, Caregiver Support Panel, and compliance monitoring systems.'
-    },
-    gaming: {
-        icon: 'fas fa-gamepad',
-        name: 'Gaming',
-        description: 'AI-powered gaming application testing with focus on advanced features, interactive gameplay elements, user experience optimization, and performance testing across multiple platforms and devices.'
-    },
-    ecommerce: {
-        icon: 'fas fa-shopping-cart',
-        name: 'E-commerce',
-        description: 'Global e-commerce platform testing including Colgate Pet Care supporting 30+ countries with multi-language and multi-currency functionality. Experience with pet profiles, product recommendations, subscription programs, and cross-browser compatibility testing.'
-    },
-    consumer: {
-        icon: 'fas fa-users',
-        name: 'Consumer Goods (CG)',
-        description: 'TouchCG® mobile retail execution tool testing for sales representatives, managers, and merchandisers. Expertise in Direct Store Delivery optimization, Van Sales route management, and back office support systems for consumer goods companies like Mondelez International.'
-    },
-    ai: {
-        icon: 'fas fa-robot',
-        name: 'AI Chatbots',
-        description: 'AI-driven chatbot platform evaluation and testing against competitor analysis. Experience testing chatbot characters with comprehensive scenario coverage including sensitive content handling, child exploitation prevention, self-harm detection, and misinformation filtering across multiple categories.'
+// ============================================
+// THANK YOU MODAL
+// ============================================
+function showThankYouModal() {
+    const modal = document.getElementById('thankYouModal');
+    if (modal) {
+        modal.classList.add('active');
     }
-};
+}
 
-function openDomainModal(domainKey) {
-    const modal = document.getElementById('domain-modal');
-    const icon = document.getElementById('domain-icon');
-    const name = document.getElementById('domain-name');
-    const description = document.getElementById('domain-description');
+function closeThankYouModal() {
+    const modal = document.getElementById('thankYouModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
 
-    if (modal && domainData[domainKey]) {
-        const data = domainData[domainKey];
-        icon.className = data.icon;
-        name.textContent = data.name;
-        description.textContent = data.description;
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('thankYouModal');
+    if (modal && e.target === modal) {
+        closeThankYouModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeThankYouModal();
+    }
+});
+
+// ============================================
+// CERTIFICATE MODAL
+// ============================================
+function openCertModal(imgSrc, title, desc) {
+    const modal = document.getElementById('certModal');
+    const modalImg = document.getElementById('certModalImg');
+    const modalTitle = document.getElementById('certModalTitle');
+    const modalDesc = document.getElementById('certModalDesc');
+    
+    if (modal && modalImg && modalTitle && modalDesc) {
+        modalImg.src = imgSrc;
+        modalImg.alt = title;
+        modalTitle.textContent = title;
+        modalDesc.textContent = desc;
         modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
     }
 }
 
-function closeDomainModal() {
-    const modal = document.getElementById('domain-modal');
+function closeCertModal() {
+    const modal = document.getElementById('certModal');
     if (modal) {
         modal.style.display = 'none';
+        document.body.style.overflow = ''; // Restore scrolling
     }
 }
 
-// Domain Modal Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
-    const domainCloseBtn = document.querySelector('.domain-close');
-    const domainModal = document.getElementById('domain-modal');
-
-    if (domainCloseBtn) {
-        domainCloseBtn.addEventListener('click', closeDomainModal);
+// Close certificate modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('certModal');
+    if (modal && e.target === modal) {
+        closeCertModal();
     }
+});
 
-    if (domainModal) {
-        domainModal.addEventListener('click', (e) => {
-            if (e.target === domainModal) {
-                closeDomainModal();
+// Close certificate modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeCertModal();
+    }
+});
+
+// ============================================
+// NAVBAR SCROLL EFFECT (Optional - if you add a navbar later)
+// ============================================
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    
+    // Add any scroll-based effects here if needed
+    // For example, you could add a sticky header
+    
+    lastScroll = currentScroll;
+});
+
+// ============================================
+// PERFORMANCE: Lazy load images
+// ============================================
+if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    observer.unobserve(img);
+                }
             }
         });
-    }
-
-    // ESC key to close domain modal
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeDomainModal();
-        }
     });
+
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+    });
+}
+
+// ============================================
+// ACCESSIBILITY: Keyboard navigation improvements
+// ============================================
+document.addEventListener('keydown', function(e) {
+    // Allow Enter key to trigger button clicks in cards
+    if (e.key === 'Enter' && e.target.classList.contains('cert-card')) {
+        e.target.click();
+    }
+});
+
+// ============================================
+// UTILITY: Debounce function for scroll events
+// ============================================
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Apply debounce to scroll events if needed
+const handleScroll = debounce(() => {
+    // Scroll handling logic here
+}, 100);
+
+// ============================================
+// INITIALIZATION
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Resume website loaded successfully');
+    
+    // Add any initialization code here
+    // For example, checking if certain elements exist before adding event listeners
 });
